@@ -1,5 +1,9 @@
 <?php
 
+// echo '<pre>';
+
+// echo '<?pre>';
+
 $hotels = [
 
    [
@@ -40,6 +44,25 @@ $hotels = [
 
 ];
 
+$filteredHotels = [];
+
+$name = $_GET['name'];
+$vote = $_GET['vote'];
+$parking = $_GET['parking'];
+$distance = $_GET['distance'];
+
+if (isset($parking)) {
+   foreach ($hotels as $hotel) {
+
+      if (str_contains(strval($hotel['parking']), $parking)) {
+
+         $filteredHotels[] = $hotel;
+      }
+   }
+} else {
+   $filteredHotels = $hotels;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -56,31 +79,55 @@ $hotels = [
 </head>
 
 <body class="text-bg-dark">
-
    <main class="container">
 
-      <h1 class="text-center">Hotels</h1>
+      <h1 class="text-center mt-3">Hotels</h1>
 
-      <table class="table table-dark text-center">
+      <form class="input-group my-4" method="GET">
+
+         <input class="form-control" type="text" name="name" placeholder="Name">
+
+         <input class="form-control" type="number" name="vote" min="1" max="5" placeholder="Vote (min)">
+
+         <select class="form-select" name="distance">
+            <option value="" selected disabled>Distance to center</option>
+            <option value="0">
+               < 5 km</option>
+            <option value="1">5 km - 10 km</option>
+            <option value="2">10 km ></option>
+         </select>
+
+         <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" value="1" name="parking">
+            <label class="form-check-label mx-3" for="parking">Park</label>
+         </div>
+
+
+
+         <button class="btn btn-primary" type="submit">Search</button>
+
+      </form>
+
+      <table class="table table-info table-striped">
          <thead>
-            <tr>
+            <tr class="fs-5">
                <th>Name</th>
                <th>Description</th>
-               <th>Parking</th>
-               <th>Vote</th>
-               <th>Distance to center</th>
+               <th class="text-center">Parking</th>
+               <th class="text-center">Vote</th>
+               <th class="text-center">Distance to center</th>
             </tr>
          </thead>
          <tbody>
             <?php
-            foreach ($hotels as $hotel) {
+            foreach ($filteredHotels as $hotel) {
             ?>
                <tr>
                   <td><?php echo $hotel['name'] ?></td>
                   <td><?php echo $hotel['description'] ?></td>
-                  <td><?php echo $hotel['parking'] ?></td>
-                  <td><?php echo $hotel['vote'] ?></td>
-                  <td><?php echo $hotel['distance_to_center'] ?></td>
+                  <td class="text-center"><?php echo ($hotel['parking'] ? '&check;' : '&cross;') ?></td>
+                  <td class="text-center"><?php echo $hotel['vote'] ?></td>
+                  <td class="text-center"><?php echo "{$hotel['distance_to_center']} km" ?></td>
                </tr>
 
             <?php
