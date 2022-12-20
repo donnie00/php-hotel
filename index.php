@@ -56,19 +56,39 @@ $hotels = [
 </head>
 
 <body class="text-bg-dark">
-   <h1 class="text-center">Hello</h1>
 
-   <?php
-   echo '<pre>';
+   <main class="container">
 
-   foreach ($hotels as $hotel) {
-      var_dump($hotel);
-   }
+      <h1 class="text-center">Hotels</h1>
 
-   echo '</pre>'
+      <table class="table table-dark text-center">
+         <thead>
+            <tr>
+               <th>Name</th>
+               <th>Description</th>
+               <th>Parking</th>
+               <th>Vote</th>
+               <th>Distance to center</th>
+            </tr>
+         </thead>
+         <tbody>
+            <?php
+            foreach ($hotels as $hotel) {
+            ?>
+               <tr>
+                  <td><?php echo $hotel['name'] ?></td>
+                  <td><?php echo $hotel['description'] ?></td>
+                  <td><?php echo $hotel['parking'] ?></td>
+                  <td><?php echo $hotel['vote'] ?></td>
+                  <td><?php echo $hotel['distance_to_center'] ?></td>
+               </tr>
 
-   ?>
-
+            <?php
+            }
+            ?>
+         </tbody>
+      </table>
+   </main>
 </body>
 
 </html>
