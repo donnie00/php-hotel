@@ -1,9 +1,5 @@
 <?php
 
-// echo '<pre>';
-
-// echo '<?pre>';
-
 $hotels = [
 
    [
@@ -51,11 +47,31 @@ $vote = $_GET['vote'];
 $parking = $_GET['parking'];
 $distance = $_GET['distance'];
 
-if (isset($parking)) {
+
+if (isset($parking) || isset($vote) || isset($name) || isset($distance)) {
+
    foreach ($hotels as $hotel) {
 
-      if (str_contains(strval($hotel['parking']), $parking)) {
+      $toPush = true;
 
+
+      if (isset($vote) && strval($hotel['vote']) < strval($vote)) {
+         $toPush = false;
+      };
+
+      if (isset($parking) && !str_contains(strval($hotel['parking']), $parking)) {
+         $toPush = false;
+      };
+
+      if (isset($name) && !str_contains(strtolower($hotel['name']), strtolower($name))) {
+         $toPush = false;
+      };
+
+      if (isset($distance) && strval($hotel['distance_to_center']) >= $distance) {
+         $toPush = false;
+      };
+
+      if ($toPush) {
          $filteredHotels[] = $hotel;
       }
    }
@@ -85,16 +101,16 @@ if (isset($parking)) {
 
       <form class="input-group my-4" method="GET">
 
-         <input class="form-control" type="text" name="name" placeholder="Name">
+         <input class="form-control" type="text" name="name" value="<?php echo $name ?? '' ?>" placeholder="Name">
 
-         <input class="form-control" type="number" name="vote" min="1" max="5" placeholder="Vote (min)">
+         <input class="form-control" type="number" name="vote" value="<?php echo $vote ?? '' ?>" min="1" max="5" placeholder="Vote (min)">
 
          <select class="form-select" name="distance">
-            <option value="" selected disabled>Distance to center</option>
-            <option value="0">
+            <option selected disabled>Distance to center</option>
+            <option value="5">
                < 5 km</option>
-            <option value="1">5 km - 10 km</option>
-            <option value="2">10 km ></option>
+            <option value="10">max 10 km</option>
+            <option value="inf">10 km ></option>
          </select>
 
          <div class="input-group-text">
@@ -102,9 +118,8 @@ if (isset($parking)) {
             <label class="form-check-label mx-3" for="parking">Park</label>
          </div>
 
-
-
          <button class="btn btn-primary" type="submit">Search</button>
+         <button class="btn btn-secondary" type="reset">Clear</button>
 
       </form>
 
